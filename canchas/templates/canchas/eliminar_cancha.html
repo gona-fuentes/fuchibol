@@ -1,0 +1,59 @@
+{% extends "usuarios/base.html" %}
+
+{% block title %}Eliminar Cancha{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-red-50 to-pink-100 py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full space-y-8">
+        <div>
+            <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
+                Eliminar Cancha
+            </h2>
+            <p class="mt-2 text-center text-sm text-gray-600">
+                ¿Estás seguro de que quieres eliminar esta cancha?
+            </p>
+        </div>
+        <div class="bg-white py-8 px-6 shadow-xl rounded-lg">
+            <div class="text-center">
+                {% if cancha.imagen %}
+                <img src="{{ cancha.imagen.url }}" alt="{{ cancha.nombre }}" class="mx-auto w-32 h-20 object-cover rounded-lg mb-4">
+                {% else %}
+                <img src="https://via.placeholder.com/128x80?text=Cancha" alt="Cancha" class="mx-auto w-32 h-20 object-cover rounded-lg mb-4">
+                {% endif %}
+                <h3 class="text-lg font-semibold text-gray-900">{{ cancha.nombre }}</h3>
+                <p class="text-sm text-gray-600 mt-2">{{ cancha.descripcion|truncatewords:30 }}</p>
+                <p class="text-sm text-gray-600 mt-1"><strong>Ubicación:</strong> {{ cancha.ubicacion }}</p>
+                <p class="text-sm text-gray-600"><strong>Jugadores:</strong> {{ cancha.cantidad_jugadores }}</p>
+                <p class="text-sm text-gray-600"><strong>Precio:</strong> ${{ cancha.precio_por_hora }}</p>
+            </div>
+
+            <div class="mt-8">
+                <p class="text-sm text-red-600 text-center mb-6">
+                    <svg class="inline w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                    </svg>
+                    Esta acción no se puede deshacer. Se eliminarán todos los datos asociados.
+                </p>
+
+                <form method="post" class="space-y-4">
+                    {% csrf_token %}
+                    <div class="flex space-x-4">
+                        <button type="submit" class="group relative flex-1 flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition duration-150 ease-in-out">
+                            <span class="absolute left-0 inset-y-0 flex items-center pl-3">
+                                <svg class="h-5 w-5 text-red-500 group-hover:text-red-400" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" clip-rule="evenodd" />
+                                    <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                                </svg>
+                            </span>
+                            Sí, Eliminar
+                        </button>
+                        <a href="{% url 'canchas:dashboard_admin' %}" class="flex-1 flex justify-center py-2 px-4 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out">
+                            Cancelar
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

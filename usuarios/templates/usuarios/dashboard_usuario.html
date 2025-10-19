@@ -1,0 +1,65 @@
+{% extends "usuarios/base.html" %}
+
+{% block title %}Mi Dashboard{% endblock %}
+
+{% block content %}
+<div class="bg-white p-6 rounded shadow-md">
+    <h2 class="text-2xl font-bold mb-6">Bienvenido, {{ user.first_name }} {{ user.last_name }}</h2>
+
+    <!-- Datos de Usuario -->
+    <div class="mb-6 space-y-2">
+        <p><span class="font-semibold">Usuario:</span> {{ user.username }}</p>
+        <p><span class="font-semibold">Email:</span> {{ user.email }}</p>
+        <p><span class="font-semibold">Celular:</span> {{ user.perfil.celular }}</p>
+        <p><span class="font-semibold">Instagram:</span> {{ user.perfil.instagram }}</p>
+    </div>
+
+    <hr class="my-6">
+
+    <!-- Tabla de Reservas -->
+    <h3 class="text-xl font-semibold mb-4">Mis Reservas</h3>
+    <div class="overflow-x-auto mb-6">
+        <table class="min-w-full bg-white border rounded shadow-md">
+            <thead class="bg-gray-200">
+                <tr>
+                    <th class="px-4 py-2 text-left">Cancha</th>
+                    <th class="px-4 py-2 text-left">Fecha</th>
+                    <th class="px-4 py-2 text-left">Hora Inicio</th>
+                    <th class="px-4 py-2 text-left">Hora Fin</th>
+                    <th class="px-4 py-2 text-left">Estado</th>
+                    <th class="px-4 py-2 text-left">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for reserva in reservas %}
+                <tr class="border-t">
+                    <td class="px-4 py-2">{{ reserva.cancha.nombre }}</td>
+                    <td class="px-4 py-2">{{ reserva.fecha }}</td>
+                    <td class="px-4 py-2">{{ reserva.hora_inicio }}</td>
+                    <td class="px-4 py-2">{{ reserva.hora_fin }}</td>
+                    <td class="px-4 py-2">{{ reserva.estado }}</td>
+                    <td class="px-4 py-2">
+                        {% if reserva.estado == "Reservada" %}
+                        <a href="{% url 'canchas:cancelar_reserva' reserva.id %}" 
+                           class="text-red-600 hover:underline">Cancelar</a>
+                        {% else %}
+                        -
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="6" class="text-center p-4">No tienes reservas aún.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Botón debajo de la tabla -->
+    <div class="mt-4">
+        <a href="{% url 'canchas:dashboard_canchas' %}" 
+           class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
+            Historial de reservas
+        </a>
+    </div>
+</div>
+{% endblock %}

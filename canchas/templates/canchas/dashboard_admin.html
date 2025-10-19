@@ -1,0 +1,224 @@
+{% extends "usuarios/base.html" %}
+
+{% block title %}Panel Administrador{% endblock %}
+
+{% block content %}
+<h2 class="text-2xl font-bold mb-6">Gestor de Canchas</h2>
+
+<!-- Formulario para agregar nueva cancha -->
+<div class="bg-white shadow-xl rounded-lg p-8 mb-10">
+    <h3 class="text-2xl font-bold mb-6 text-center text-gray-900">Agregar Nueva Cancha</h3>
+    <form method="post" enctype="multipart/form-data" class="space-y-6">
+        {% csrf_token %}
+
+        <!-- Nombre -->
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">
+                <svg class="inline w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                </svg>
+                Nombre de la Cancha
+            </label>
+            <input type="text" name="nombre" value="{{ form.nombre.value|default:'' }}" class="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="Ej: Cancha Norte" required>
+            {% if form.nombre.errors %}
+                <p class="mt-1 text-sm text-red-600">{{ form.nombre.errors.0 }}</p>
+            {% endif %}
+        </div>
+
+        <!-- Descripción -->
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">
+                <svg class="inline w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                Descripción
+            </label>
+            <textarea name="descripcion" rows="3" class="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="Describe la cancha...">{{ form.descripcion.value|default:'' }}</textarea>
+            {% if form.descripcion.errors %}
+                <p class="mt-1 text-sm text-red-600">{{ form.descripcion.errors.0 }}</p>
+            {% endif %}
+        </div>
+
+        <!-- Ubicación -->
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">
+                <svg class="inline w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                </svg>
+                Ubicación
+            </label>
+            <input type="text" name="ubicacion" value="{{ form.ubicacion.value|default:'' }}" class="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="Dirección de la cancha" required>
+            {% if form.ubicacion.errors %}
+                <p class="mt-1 text-sm text-red-600">{{ form.ubicacion.errors.0 }}</p>
+            {% endif %}
+        </div>
+
+        <!-- Jugadores + Precio -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">
+                    <svg class="inline w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                    </svg>
+                    Cantidad de Jugadores
+                </label>
+                <input type="number" name="cantidad_jugadores" value="{{ form.cantidad_jugadores.value|default:'' }}" class="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="Ej: 22" required>
+                {% if form.cantidad_jugadores.errors %}
+                    <p class="mt-1 text-sm text-red-600">{{ form.cantidad_jugadores.errors.0 }}</p>
+                {% endif %}
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">
+                    <svg class="inline w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+                    </svg>
+                    Precio por Hora
+                </label>
+                <input type="number" step="0.01" name="precio_por_hora" value="{{ form.precio_por_hora.value|default:'' }}" class="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="Ej: 50.00" required>
+                {% if form.precio_por_hora.errors %}
+                    <p class="mt-1 text-sm text-red-600">{{ form.precio_por_hora.errors.0 }}</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Imagen -->
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">
+                <svg class="inline w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                </svg>
+                Imagen de la Cancha
+            </label>
+            <input type="file" name="imagen" accept="image/*" class="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm bg-white">
+            {% if form.imagen.errors %}
+                <p class="mt-1 text-sm text-red-600">{{ form.imagen.errors.0 }}</p>
+            {% endif %}
+        </div>
+
+        <!-- Botón -->
+        <div>
+            <button type="submit" class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out">
+                <span class="absolute left-0 inset-y-0 flex items-center pl-3">
+                    <svg class="h-5 w-5 text-indigo-500 group-hover:text-indigo-400" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+                    </svg>
+                </span>
+                Agregar Cancha
+            </button>
+        </div>
+    </form>
+</div>
+
+<!-- Lista de Canchas Registradas -->
+<h3 class="text-xl font-semibold mb-4">Canchas Registradas</h3>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    {% for cancha in canchas %}
+    <div class="bg-white shadow-md rounded-lg overflow-hidden">
+        {% if cancha.imagen %}
+        <img src="{{ cancha.imagen.url }}" alt="{{ cancha.nombre }}" class="w-full h-40 object-cover">
+        {% else %}
+        <img src="https://via.placeholder.com/400x200?text=Cancha" alt="Cancha" class="w-full h-40 object-cover">
+        {% endif %}
+        <div class="p-4">
+            <h4 class="text-lg font-bold">{{ cancha.nombre }}</h4>
+            <p class="text-gray-600 text-sm">{{ cancha.descripcion|truncatewords:20 }}</p>
+            <p class="mt-2"><span class="font-semibold">Ubicación:</span> {{ cancha.ubicacion }}</p>
+            <p><span class="font-semibold">Jugadores:</span> {{ cancha.cantidad_jugadores }}</p>
+            <p><span class="font-semibold">Precio:</span> ${{ cancha.precio_por_hora }}</p>
+
+            <div class="mt-4 flex justify-between">
+                <a href="{% url 'canchas:editar_cancha' cancha.id %}"
+                   class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm">Editar</a>
+                <a href="{% url 'canchas:eliminar_cancha' cancha.id %}"
+                   class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-sm">Eliminar</a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <p>No hay canchas registradas.</p>
+    {% endfor %}
+</div>
+
+<!-- Filtro de Reservas -->
+<div class="bg-white p-6 rounded shadow-md mt-10">
+    <h3 class="text-2xl font-semibold mb-4">Filtrar Reservas</h3>
+    <form method="get" class="space-x-4 mb-6">
+        <label for="estado" class="font-semibold">Estado:</label>
+        <select name="estado" id="estado" class="border rounded-lg px-3 py-2">
+            <option value="">Todos</option>
+            <option value="Reservada" {% if request.GET.estado == "Reservada" %}selected{% endif %}>Reservada</option>
+            <option value="Cancelada" {% if request.GET.estado == "Cancelada" %}selected{% endif %}>Cancelada</option>
+            <option value="Completada" {% if request.GET.estado == "Completada" %}selected{% endif %}>Completada</option>
+        </select>
+        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
+            Filtrar
+        </button>
+    </form>
+</div>
+
+<!-- Listado de Reservas -->
+<div class="bg-white p-6 rounded shadow-md">
+    <h3 class="text-2xl font-semibold mb-4">Reservas</h3>
+    <table class="w-full table-auto border-collapse border border-gray-300">
+        <thead class="bg-gray-200">
+            <tr>
+                <th class="border px-4 py-2">Usuario</th>
+                <th class="border px-4 py-2">Cancha</th>
+                <th class="border px-4 py-2">Fecha</th>
+                <th class="border px-4 py-2">Hora Inicio</th>
+                <th class="border px-4 py-2">Hora Fin</th>
+                <th class="border px-4 py-2">Estado</th>
+                <th class="border px-4 py-2">Acción</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for reserva in reservas %}
+            <tr>
+                <td class="border px-4 py-2">{{ reserva.usuario.username }}</td>
+                <td class="border px-4 py-2">{{ reserva.cancha.nombre }}</td>
+                <td class="border px-4 py-2">{{ reserva.fecha }}</td>
+                <td class="border px-4 py-2">{{ reserva.hora_inicio }}</td>
+                <td class="border px-4 py-2">{{ reserva.hora_fin }}</td>
+                <td class="border px-4 py-2">{{ reserva.estado }}</td>
+                <td class="border px-4 py-2">
+                    {% if reserva.estado == "Reservada" %}
+                    <!-- Botón de Cancelación (Rojo) -->
+                    <form method="post" action="{% url 'canchas:cancelar_reserva_admin' reserva.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-2 py-1 rounded">
+                            Cancelar
+                        </button>
+                    </form>
+
+                    <!-- Botón de Completar (Verde) -->
+                    <form method="post" action="{% url 'canchas:completar_reserva_admin' reserva.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-2 py-1 rounded">
+                            Completar
+                        </button>
+                    </form>
+                    {% elif reserva.estado == "Completada" %}
+                    <!-- Botón de Completada (Verde) deshabilitado -->
+                    <form method="post" action="{% url 'canchas:completar_reserva_admin' reserva.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-2 py-1 rounded" disabled>
+                            Completada
+                        </button>
+                    </form>
+                    {% else %}
+                    <!-- Otros estados -->
+                    <span class="text-gray-500">No disponible</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7" class="text-center py-4">No hay reservas registradas.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

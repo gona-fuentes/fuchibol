@@ -1,0 +1,40 @@
+{% extends "usuarios/base.html" %}
+
+{% block title %}Listado de Canchas{% endblock %}
+
+{% block content %}
+<h2 class="text-3xl font-bold mb-8 text-center">Canchas Disponibles</h2>
+
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+    {% for cancha in canchas %}
+    <div class="bg-white rounded-lg shadow-lg overflow-hidden transform transition hover:scale-105 hover:shadow-xl">
+        
+        {% if cancha.imagen %}
+            <img src="{{ cancha.imagen.url }}" 
+                 alt="Imagen de {{ cancha.nombre }}" 
+                 class="w-full h-48 object-cover">
+        {% else %}
+            <img src="https://via.placeholder.com/400x250?text=Cancha" 
+                 alt="Imagen de {{ cancha.nombre }}" 
+                 class="w-full h-48 object-cover">
+        {% endif %}
+
+        <div class="p-5">
+            <h3 class="text-xl font-semibold text-gray-800 mb-2">{{ cancha.nombre }}</h3>
+            <p class="text-gray-600 mb-3">{{ cancha.descripcion }}</p>
+            
+            <p class="text-sm text-gray-500"><span class="font-semibold">Ubicación:</span> {{ cancha.ubicacion }}</p>
+            <p class="text-sm text-gray-500"><span class="font-semibold">Jugadores:</span> {{ cancha.cantidad_jugadores }}</p>
+            <p class="text-sm text-gray-500 mb-4"><span class="font-semibold">Precio por hora:</span> ${{ cancha.precio_por_hora }}</p>
+
+            <a href="{% url 'canchas:reservar_cancha' cancha.id %}"
+               class="inline-block bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-4 py-2 rounded-lg shadow hover:from-blue-700 hover:to-indigo-700 transition">
+                Reservar
+            </a>
+        </div>
+    </div>
+    {% empty %}
+    <p class="text-center text-gray-600 col-span-full">No hay canchas registradas.</p>
+    {% endfor %}
+</div>
+{% endblock %}

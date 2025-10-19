@@ -1,0 +1,67 @@
+{% extends "usuarios/base.html" %}
+
+{% block title %}Mis Reservas{% endblock %}
+
+{% block content %}
+<div class="bg-white p-6 rounded shadow-md">
+    <h2 class="text-2xl font-bold mb-6">Dashboard de Reservas</h2>
+
+    <!-- Datos del Usuario -->
+    <div class="mb-6 space-y-2">
+        <p><span class="font-semibold">Nombre:</span> {{ user.first_name }} {{ user.last_name }}</p>
+        <p><span class="font-semibold">Usuario:</span> {{ user.username }}</p>
+        <p><span class="font-semibold">Email:</span> {{ user.email }}</p>
+    </div>
+
+    <hr class="my-6">
+
+    <!-- Tabla de Reservas -->
+    {% if reservas %}
+    <div class="overflow-x-auto mb-6">
+        <table class="min-w-full bg-white border rounded shadow-md">
+            <thead class="bg-gray-200">
+                <tr>
+                    <th class="px-4 py-2 text-left">Cancha</th>
+                    <th class="px-4 py-2 text-left">Fecha</th>
+                    <th class="px-4 py-2 text-left">Hora Inicio</th>
+                    <th class="px-4 py-2 text-left">Hora Fin</th>
+                    <th class="px-4 py-2 text-left">Estado</th>
+                    <th class="px-4 py-2 text-left">Acción</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for reserva in reservas %}
+                <tr class="border-t hover:bg-gray-50">
+                    <td class="px-4 py-2">{{ reserva.cancha.nombre }}</td>
+                    <td class="px-4 py-2">{{ reserva.fecha }}</td>
+                    <td class="px-4 py-2">{{ reserva.hora_inicio }}</td>
+                    <td class="px-4 py-2">{{ reserva.hora_fin }}</td>
+                    <td class="px-4 py-2">
+                        {% if reserva.estado == "Reservada" %}
+                            <span class="text-green-600 font-semibold">{{ reserva.estado }}</span>
+                        {% else %}
+                            <span class="text-red-600 font-semibold">{{ reserva.estado }}</span>
+                        {% endif %}
+                    </td>
+                    <td class="px-4 py-2">
+                        {% if reserva.estado == "Reservada" %}
+                        <form action="{% url 'canchas:cancelar_reserva' reserva.id %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">
+                                Cancelar
+                            </button>
+                        </form>
+                        {% else %}
+                            N/A
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+        <p class="text-gray-600">No tienes reservas realizadas.</p>
+    {% endif %}
+</div>
+{% endblock %}

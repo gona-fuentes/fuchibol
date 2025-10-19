@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Usuarios{% endblock %}</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+    <!-- Navbar -->
+    <nav class="bg-blue-600 text-white p-4 shadow-md">
+    <div class="flex justify-between items-center">
+        
+        <!-- Lado izquierdo -->
+        <div class="flex items-center space-x-6">
+            <a href="{% url 'index' %}" class="text-xl font-bold hover:underline">Fuchibol</a>
+            {% if user.is_authenticated %}
+                <a href="{% url 'canchas:listar_canchas' %}" class="hover:underline">Canchas</a>
+            {% endif %}
+        </div>
+
+        <!-- Lado derecho -->
+        <div class="flex items-center space-x-6">
+        {% if user.is_authenticated %}
+            <span class="font-semibold">Hola {{ user.username }}!</span>
+            <a href="{% url 'dashboard_usuario' %}" class="hover:underline">Mi Perfil</a>
+
+            {% if user.is_staff %}
+                <a href="{% url 'canchas:dashboard_admin' %}" class="hover:underline">Dashboard Admin</a>
+            {% endif %}
+
+            <form method="post" action="{% url 'logout' %}" class="inline">
+                {% csrf_token %}
+                <button type="submit" class="bg-red-500 hover:bg-red-600 px-3 py-1 rounded text-white">
+                    Cerrar sesión
+                </button>
+            </form>
+        {% else %}
+            <a href="{% url 'login' %}" class="hover:underline">Iniciar sesión</a>
+            <a href="{% url 'registrar' %}" class="hover:underline">Registrarse</a>
+        {% endif %}
+        </div>
+
+        
+    </div>
+</nav>
+
+
+    <!-- Content -->
+    <main class="container mx-auto p-6">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+</body>
+</html>

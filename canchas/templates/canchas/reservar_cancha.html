@@ -1,0 +1,101 @@
+{% extends "usuarios/base.html" %}
+
+{% block title %}Reservar Cancha{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
+    
+    <!-- Imagen de la cancha -->
+    {% if cancha.imagen %}
+        <img src="{{ cancha.imagen.url }}" alt="Imagen de {{ cancha.nombre }}" class="w-full h-64 object-cover">
+    {% else %}
+        <img src="https://via.placeholder.com/800x400?text=Cancha" alt="Imagen de {{ cancha.nombre }}" class="w-full h-64 object-cover">
+    {% endif %}
+    
+    <!-- Información de la cancha -->
+    <div class="p-6">
+        <h2 class="text-3xl font-bold text-gray-800 mb-2">{{ cancha.nombre }}</h2>
+        <p class="text-gray-600 mb-4">{{ cancha.descripcion }}</p>
+
+        <div class="grid grid-cols-2 gap-4 mb-6 text-gray-700">
+            <p><span class="font-semibold">Ubicación:</span> {{ cancha.ubicacion }}</p>
+            <p><span class="font-semibold">Jugadores:</span> {{ cancha.cantidad_jugadores }}</p>
+            <p><span class="font-semibold">Precio por hora:</span> ${{ cancha.precio_por_hora }}</p>
+        </div>
+
+        <!-- Mostrar mensajes -->
+        {% if messages %}
+            <div class="mb-4 space-y-2">
+                {% for message in messages %}
+                    <div class="
+                        {% if message.tags == 'error' %}
+                            bg-red-100 border border-red-400 text-red-700
+                        {% elif message.tags == 'success' %}
+                            bg-green-100 border border-green-400 text-green-700
+                        {% else %}
+                            bg-blue-100 border border-blue-400 text-blue-700
+                        {% endif %}
+                        px-4 py-3 rounded relative
+                    ">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <!-- Formulario de reserva -->
+        <form method="post" class="space-y-5">
+            {% csrf_token %}
+
+            <!-- Fecha -->
+            <div>
+                <label class="block font-semibold mb-1">Fecha:</label>
+                <input type="date" name="fecha" min="{{ today }}" required
+                       class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500">
+            </div>
+
+            <!-- Hora de inicio -->
+            <div>
+                <label class="block font-semibold mb-1">Hora de Inicio:</label>
+                <select id="hora_inicio" name="hora_inicio" required
+                        class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500">
+                    {% for hora in horas_disponibles %}
+                        <option value="{{ hora }}">{{ hora }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Hora fin (solo lectura) -->
+            <div>
+                <label class="block font-semibold mb-1">Hora de Término:</label>
+                <input id="hora_fin" type="text" readonly
+                       class="w-full border rounded px-3 py-2 bg-gray-100 text-gray-700">
+            </div>
+
+            <!-- Botón -->
+            <button type="submit"
+                    class="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg font-semibold transition">
+                Confirmar Reserva
+            </button>
+        </form>
+    </div>
+</div>
+
+<!-- Script para autocompletar la hora fin -->
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const horaInicio = document.getElementById("hora_inicio");
+    const horaFin = document.getElementById("hora_fin");
+
+    function calcularHoraFin() {
+        if (!horaInicio.value) return;
+        let [h, m] = horaInicio.value.split(":").map(Number);
+        h = (h + 1) % 24; // suma 1 hora
+        horaFin.value = (h < 10 ? "0" : "") + h + ":" + (m < 10 ? "0" : "") + m;
+    }
+
+    horaInicio.addEventListener("change", calcularHoraFin);
+    calcularHoraFin(); // inicializa al cargar
+});
+</script>
+{% endblock %}
